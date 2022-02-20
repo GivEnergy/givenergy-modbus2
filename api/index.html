@@ -854,6 +854,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.inverter.UnknownModelError" class="md-nav__link">
+    UnknownModelError
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2017,6 +2024,13 @@
           <li class="md-nav__item">
   <a href="#givenergy_modbus.model.inverter.Model" class="md-nav__link">
     Model
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.inverter.UnknownModelError" class="md-nav__link">
+    UnknownModelError
   </a>
   
 </li>
@@ -5286,7 +5300,7 @@ and TransactionManager throughout constructors up the call chain.</p>
           <div class="highlight"><pre><span></span><code><span class="nd">@root_validator</span>
 <span class="k">def</span> <span class="nf">compute_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Computes the inverter model from the serial number prefix.&quot;&quot;&quot;</span>
-    <span class="n">values</span><span class="p">[</span><span class="s1">&#39;inverter_model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;inverter_serial_number&#39;</span><span class="p">][:</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">values</span><span class="p">[</span><span class="s1">&#39;inverter_model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">from_serial_number</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;inverter_serial_number&#39;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">values</span>
 </code></pre></div>
         </details>
@@ -5340,6 +5354,29 @@ and TransactionManager throughout constructors up the call chain.</p>
 
 
   </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h4 id="givenergy_modbus.model.inverter.UnknownModelError" class="doc doc-heading">
+        <code>UnknownModelError</code>
+
+
+
+<a href="#givenergy_modbus.model.inverter.UnknownModelError" class="headerlink" title="Permanent link">&para;</a></h4>
+
+    <div class="doc doc-contents ">
+
+      <p>Raised when encountering an unknown model.</p>
+
+
 
     </div>
 
