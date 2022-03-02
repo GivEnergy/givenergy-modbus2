@@ -456,9 +456,8 @@ yourself in the foot, so as long as you use the client and its exposed methods, 
 device:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">givenergy_modbus.client</span> <span class="kn">import</span> <span class="n">GivEnergyClient</span>
-<span class="kn">from</span> <span class="nn">givenergy_modbus.model.battery</span> <span class="kn">import</span> <span class="n">Battery</span>
-<span class="kn">from</span> <span class="nn">givenergy_modbus.model.inverter</span> <span class="kn">import</span> <span class="n">Inverter</span><span class="p">,</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">givenergy_modbus.model.register_cache</span> <span class="kn">import</span> <span class="n">RegisterCache</span>
+<span class="kn">from</span> <span class="nn">givenergy_modbus.model.inverter</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">givenergy_modbus.model.plant</span> <span class="kn">import</span> <span class="n">Plant</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">GivEnergyClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;192.168.99.99&quot;</span><span class="p">)</span>
 
@@ -469,36 +468,30 @@ device:</p>
 <span class="c1"># set the inverter to charge when there&#39;s excess, and discharge otherwise. it will also respect charging slots.</span>
 <span class="n">client</span><span class="o">.</span><span class="n">set_mode_dynamic</span><span class="p">()</span>
 
-<span class="n">rc</span> <span class="o">=</span> <span class="n">RegisterCache</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">update_inverter_registers</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span>
-<span class="n">inverter</span> <span class="o">=</span> <span class="n">Inverter</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">inverter_serial_number</span> <span class="o">==</span> <span class="s1">&#39;SA1234G567&#39;</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">inverter_model</span> <span class="o">==</span> <span class="n">Model</span><span class="o">.</span><span class="n">Hybrid</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">v_pv1</span> <span class="o">==</span> <span class="mf">1.4</span>  <span class="c1"># V</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">e_battery_discharge_day</span> <span class="o">==</span> <span class="mf">8.1</span>  <span class="c1"># kWh</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">enable_charge_target</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span> <span class="o">==</span> <span class="p">{</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Plant</span><span class="p">(</span><span class="n">batteries</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">refresh_plant</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">full_refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">inverter_serial_number</span> <span class="o">==</span> <span class="s1">&#39;SA1234G567&#39;</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">inverter_model</span> <span class="o">==</span> <span class="n">Model</span><span class="o">.</span><span class="n">Hybrid</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">v_pv1</span> <span class="o">==</span> <span class="mf">1.4</span>  <span class="c1"># V</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">e_battery_discharge_day</span> <span class="o">==</span> <span class="mf">8.1</span>  <span class="c1"># kWh</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">enable_charge_target</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span> <span class="o">==</span> <span class="p">{</span>
     <span class="s1">&#39;inverter_serial_number&#39;</span><span class="p">:</span> <span class="s1">&#39;SA1234G567&#39;</span><span class="p">,</span>
     <span class="s1">&#39;device_type_code&#39;</span><span class="p">:</span> <span class="s1">&#39;3001&#39;</span><span class="p">,</span>
     <span class="s1">&#39;charge_slot_1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">30</span><span class="p">)),</span>
     <span class="s1">&#39;f_ac1&#39;</span><span class="p">:</span> <span class="mf">49.98</span><span class="p">,</span>
     <span class="o">...</span>
 <span class="p">}</span>
-<span class="k">assert</span> <span class="n">inverter</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;{&quot;inverter_serial_number&quot;: &quot;SA1234G567&quot;, &quot;device_type_code&quot;: &quot;3001&quot;, ...&#39;</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">inverter</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;{&quot;inverter_serial_number&quot;: &quot;SA1234G567&quot;, &quot;device_type_code&quot;: &quot;3001&quot;, ...&#39;</span>
 
-<span class="c1"># it is _probably_ a good idea to not share register caches across devices</span>
-<span class="n">rc</span> <span class="o">=</span> <span class="n">RegisterCache</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">update_battery_registers</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="n">battery_number</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">battery</span> <span class="o">=</span> <span class="n">Battery</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span>
-
-<span class="k">assert</span> <span class="n">battery</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">==</span> <span class="s1">&#39;BG1234G567&#39;</span>
-<span class="k">assert</span> <span class="n">battery</span><span class="o">.</span><span class="n">v_battery_cell_01</span> <span class="o">==</span> <span class="mf">3.117</span>
-<span class="k">assert</span> <span class="n">battery</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span> <span class="o">==</span> <span class="p">{</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">batteries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">==</span> <span class="s1">&#39;BG1234G567&#39;</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">batteries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">v_battery_cell_01</span> <span class="o">==</span> <span class="mf">3.117</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">batteries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span> <span class="o">==</span> <span class="p">{</span>
     <span class="s1">&#39;bms_firmware_version&#39;</span><span class="p">:</span> <span class="mi">3005</span><span class="p">,</span>
     <span class="s1">&#39;design_capacity&#39;</span><span class="p">:</span> <span class="mf">160.0</span><span class="p">,</span>
     <span class="o">...</span>
 <span class="p">}</span>
-<span class="k">assert</span> <span class="n">battery</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;{&quot;battery_serial_number&quot;: &quot;BG1234G567&quot;, &quot;v_battery_cell_01&quot;: 3.117, ...&#39;</span>
+<span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">batteries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;{&quot;battery_serial_number&quot;: &quot;BG1234G567&quot;, &quot;v_battery_cell_01&quot;: 3.117, ...&#39;</span>
 </code></pre></div>
 <h3 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h3>
 <p>This package was created with <a href="https://github.com/audreyr/cookiecutter">Cookiecutter</a> and

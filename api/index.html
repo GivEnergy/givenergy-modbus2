@@ -370,6 +370,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#givenergy_modbus.client.GivEnergyClient.refresh_plant" class="md-nav__link">
+    refresh_plant()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#givenergy_modbus.client.GivEnergyClient.reset_charge_slot_1" class="md-nav__link">
     reset_charge_slot_1()
   </a>
@@ -498,20 +505,6 @@
           <li class="md-nav__item">
   <a href="#givenergy_modbus.client.GivEnergyClient.set_shallow_charge" class="md-nav__link">
     set_shallow_charge()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#givenergy_modbus.client.GivEnergyClient.update_battery_registers" class="md-nav__link">
-    update_battery_registers()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#givenergy_modbus.client.GivEnergyClient.update_inverter_registers" class="md-nav__link">
-    update_inverter_registers()
   </a>
   
 </li>
@@ -878,6 +871,19 @@
   <a href="#givenergy_modbus.model.plant.Plant" class="md-nav__link">
     Plant
   </a>
+  
+    <nav class="md-nav" aria-label="Plant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.plant.Plant.refresh" class="md-nav__link">
+    refresh()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1544,6 +1550,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#givenergy_modbus.client.GivEnergyClient.refresh_plant" class="md-nav__link">
+    refresh_plant()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#givenergy_modbus.client.GivEnergyClient.reset_charge_slot_1" class="md-nav__link">
     reset_charge_slot_1()
   </a>
@@ -1672,20 +1685,6 @@
           <li class="md-nav__item">
   <a href="#givenergy_modbus.client.GivEnergyClient.set_shallow_charge" class="md-nav__link">
     set_shallow_charge()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#givenergy_modbus.client.GivEnergyClient.update_battery_registers" class="md-nav__link">
-    update_battery_registers()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#givenergy_modbus.client.GivEnergyClient.update_inverter_registers" class="md-nav__link">
-    update_inverter_registers()
   </a>
   
 </li>
@@ -2052,6 +2051,19 @@
   <a href="#givenergy_modbus.model.plant.Plant" class="md-nav__link">
     Plant
   </a>
+  
+    <nav class="md-nav" aria-label="Plant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.plant.Plant.refresh" class="md-nav__link">
+    refresh()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2701,8 +2713,6 @@
 
 
 
-
-
   <div class="doc doc-object doc-class">
 
 
@@ -2943,6 +2953,50 @@
 
 
 
+<h4 id="givenergy_modbus.client.GivEnergyClient.refresh_plant" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">refresh_plant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plant</span><span class="p">,</span> <span class="n">full_refresh</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span></code>
+
+
+<a href="#givenergy_modbus.client.GivEnergyClient.refresh_plant" class="headerlink" title="Permanent link">&para;</a></h4>
+
+    <div class="doc doc-contents ">
+
+      <p>Refresh the internal caches for a plant. Optionally refresh only data that changes frequently.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>givenergy_modbus/client.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">refresh_plant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plant</span><span class="p">:</span> <span class="n">Plant</span><span class="p">,</span> <span class="n">full_refresh</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">DEFAULT_SLEEP</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Refresh the internal caches for a plant. Optionally refresh only data that changes frequently.&quot;&quot;&quot;</span>
+    <span class="n">inverter_registers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">InputRegister</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">full_refresh</span><span class="p">:</span>
+        <span class="n">inverter_registers</span><span class="p">[</span><span class="n">HoldingRegister</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">120</span><span class="p">]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">fetch_register_pages</span><span class="p">(</span>
+        <span class="n">inverter_registers</span><span class="p">,</span> <span class="n">plant</span><span class="o">.</span><span class="n">_inverter_rc</span><span class="p">,</span> <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">battery_rc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plant</span><span class="o">.</span><span class="n">_batteries_rcs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fetch_register_pages</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">InputRegister</span><span class="p">:</span> <span class="p">[</span><span class="mi">60</span><span class="p">]},</span>
+            <span class="n">battery_rc</span><span class="p">,</span>
+            <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
+            <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">plant</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h4 id="givenergy_modbus.client.GivEnergyClient.reset_charge_slot_1" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">reset_charge_slot_1</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
@@ -3069,7 +3123,6 @@
           <summary>Source code in <code>givenergy_modbus/client.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_battery_charge_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set the battery charge limit.&quot;&quot;&quot;</span>
-    <span class="c1"># TODO what are valid values?</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="mi">50</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Specified Charge Limit (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s1">%) is not in [0-50]%&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">modbus_client</span><span class="o">.</span><span class="n">write_holding_register</span><span class="p">(</span><span class="n">HoldingRegister</span><span class="o">.</span><span class="n">BATTERY_CHARGE_LIMIT</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
@@ -3514,69 +3567,6 @@ when it is both most expensive to import and most valuable to export energy.</p>
     <span class="sd">&quot;&quot;&quot;Set the minimum level of charge to keep.&quot;&quot;&quot;</span>
     <span class="c1"># TODO what are valid values? 4-100?</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">modbus_client</span><span class="o">.</span><span class="n">write_holding_register</span><span class="p">(</span><span class="n">HoldingRegister</span><span class="o">.</span><span class="n">BATTERY_SOC_RESERVE</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-method">
-
-
-
-<h4 id="givenergy_modbus.client.GivEnergyClient.update_battery_registers" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">update_battery_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_cache</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">battery_number</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
-
-
-<a href="#givenergy_modbus.client.GivEnergyClient.update_battery_registers" class="headerlink" title="Permanent link">&para;</a></h4>
-
-    <div class="doc doc-contents ">
-
-      <p>Reload all battery data from a given device.</p>
-
-        <details class="quote">
-          <summary>Source code in <code>givenergy_modbus/client.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">update_battery_registers</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">register_cache</span><span class="p">:</span> <span class="n">RegisterCache</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">DEFAULT_SLEEP</span><span class="p">,</span> <span class="n">battery_number</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Reload all battery data from a given device.&quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">fetch_register_pages</span><span class="p">(</span>
-        <span class="n">BATTERY_REGISTER_PAGES</span><span class="p">,</span>
-        <span class="n">register_cache</span><span class="p">,</span>
-        <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span> <span class="o">+</span> <span class="n">battery_number</span><span class="p">,</span>
-        <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span><span class="p">,</span>
-    <span class="p">)</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-method">
-
-
-
-<h4 id="givenergy_modbus.client.GivEnergyClient.update_inverter_registers" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">update_inverter_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_cache</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span></code>
-
-
-<a href="#givenergy_modbus.client.GivEnergyClient.update_inverter_registers" class="headerlink" title="Permanent link">&para;</a></h4>
-
-    <div class="doc doc-contents ">
-
-      <p>Reload inverter data and return an Inverter DTO.</p>
-
-        <details class="quote">
-          <summary>Source code in <code>givenergy_modbus/client.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">update_inverter_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_cache</span><span class="p">:</span> <span class="n">RegisterCache</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">DEFAULT_SLEEP</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Reload inverter data and return an Inverter DTO.&quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">fetch_register_pages</span><span class="p">(</span>
-        <span class="n">INVERTER_REGISTER_PAGES</span><span class="p">,</span> <span class="n">register_cache</span><span class="p">,</span> <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span>
-    <span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -5020,6 +5010,8 @@ and TransactionManager throughout constructors up the call chain.</p>
 
 
 
+
+
   </div>
 
     </div>
@@ -5452,6 +5444,36 @@ and TransactionManager throughout constructors up the call chain.</p>
 
 
 
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h5 id="givenergy_modbus.model.plant.Plant.refresh" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#givenergy_modbus.model.plant.Plant.refresh" class="headerlink" title="Permanent link">&para;</a></h5>
+
+    <div class="doc doc-contents ">
+
+      <p>Refresh the represented models from internal caches.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>givenergy_modbus/model/plant.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Refresh the represented models from internal caches.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inverter</span> <span class="o">=</span> <span class="n">Inverter</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inverter_rc</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">batteries</span> <span class="o">=</span> <span class="p">[</span><span class="n">Battery</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span> <span class="k">for</span> <span class="n">rc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batteries_rcs</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
