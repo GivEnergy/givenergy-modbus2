@@ -876,8 +876,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#givenergy_modbus.model.plant.Plant.refresh" class="md-nav__link">
-    refresh()
+  <a href="#givenergy_modbus.model.plant.Plant.batteries" class="md-nav__link">
+    batteries
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.plant.Plant.inverter" class="md-nav__link">
+    inverter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.plant.Plant.__init__" class="md-nav__link">
+    __init__()
   </a>
   
 </li>
@@ -2056,8 +2070,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#givenergy_modbus.model.plant.Plant.refresh" class="md-nav__link">
-    refresh()
+  <a href="#givenergy_modbus.model.plant.Plant.batteries" class="md-nav__link">
+    batteries
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.plant.Plant.inverter" class="md-nav__link">
+    inverter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#givenergy_modbus.model.plant.Plant.__init__" class="md-nav__link">
+    __init__()
   </a>
   
 </li>
@@ -2975,16 +3003,15 @@
         <span class="n">inverter_registers</span><span class="p">[</span><span class="n">HoldingRegister</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">120</span><span class="p">]</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">fetch_register_pages</span><span class="p">(</span>
-        <span class="n">inverter_registers</span><span class="p">,</span> <span class="n">plant</span><span class="o">.</span><span class="n">_inverter_rc</span><span class="p">,</span> <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span>
+        <span class="n">inverter_registers</span><span class="p">,</span> <span class="n">plant</span><span class="o">.</span><span class="n">inverter_rc</span><span class="p">,</span> <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span><span class="p">,</span> <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span>
     <span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">battery_rc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plant</span><span class="o">.</span><span class="n">_batteries_rcs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">battery_rc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plant</span><span class="o">.</span><span class="n">batteries_rcs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fetch_register_pages</span><span class="p">(</span>
             <span class="p">{</span><span class="n">InputRegister</span><span class="p">:</span> <span class="p">[</span><span class="mi">60</span><span class="p">]},</span>
             <span class="n">battery_rc</span><span class="p">,</span>
             <span class="n">slave_address</span><span class="o">=</span><span class="mh">0x32</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
             <span class="n">sleep_between_queries</span><span class="o">=</span><span class="n">sleep_between_queries</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="n">plant</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
 </code></pre></div>
         </details>
     </div>
@@ -3117,12 +3144,12 @@
 
     <div class="doc doc-contents ">
 
-      <p>Set the battery charge limit.</p>
+      <p>Set the battery charge power limit as percentage. 50% (2.6 kW) is the maximum for most inverters.</p>
 
         <details class="quote">
           <summary>Source code in <code>givenergy_modbus/client.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_battery_charge_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the battery charge limit.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Set the battery charge power limit as percentage. 50% (2.6 kW) is the maximum for most inverters.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="mi">50</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Specified Charge Limit (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s1">%) is not in [0-50]%&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">modbus_client</span><span class="o">.</span><span class="n">write_holding_register</span><span class="p">(</span><span class="n">HoldingRegister</span><span class="o">.</span><span class="n">BATTERY_CHARGE_LIMIT</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
@@ -3146,12 +3173,12 @@
 
     <div class="doc doc-contents ">
 
-      <p>Set the battery discharge limit.</p>
+      <p>Set the battery discharge power limit as percentage. 50% (2.6 kW) is the maximum for most inverters.</p>
 
         <details class="quote">
           <summary>Source code in <code>givenergy_modbus/client.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_battery_discharge_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the battery discharge limit.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Set the battery discharge power limit as percentage. 50% (2.6 kW) is the maximum for most inverters.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="mi">50</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Specified Discharge Limit (</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s1">%) is not in [0-50]%&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">modbus_client</span><span class="o">.</span><span class="n">write_holding_register</span><span class="p">(</span><span class="n">HoldingRegister</span><span class="o">.</span><span class="n">BATTERY_DISCHARGE_LIMIT</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
@@ -5440,6 +5467,50 @@ and TransactionManager throughout constructors up the call chain.</p>
 
 
 
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="givenergy_modbus.model.plant.Plant.batteries" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">batteries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">givenergy_modbus</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">Battery</span><span class="p">]</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#givenergy_modbus.model.plant.Plant.batteries" class="headerlink" title="Permanent link">&para;</a></h5>
+
+    <div class="doc doc-contents ">
+
+      <p>Return Battery models for the Plant.</p>
+    </div>
+
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="givenergy_modbus.model.plant.Plant.inverter" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">inverter</span><span class="p">:</span> <span class="n">Inverter</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#givenergy_modbus.model.plant.Plant.inverter" class="headerlink" title="Permanent link">&para;</a></h5>
+
+    <div class="doc doc-contents ">
+
+      <p>Return Inverter model for the Plant.</p>
+    </div>
+
+  </div>
 
 
 
@@ -5453,27 +5524,34 @@ and TransactionManager throughout constructors up the call chain.</p>
 
 
 
-<h5 id="givenergy_modbus.model.plant.Plant.refresh" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<h5 id="givenergy_modbus.model.plant.Plant.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">)</span></code>
 
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
 
-<a href="#givenergy_modbus.model.plant.Plant.refresh" class="headerlink" title="Permanent link">&para;</a></h5>
+<a href="#givenergy_modbus.model.plant.Plant.__init__" class="headerlink" title="Permanent link">&para;</a></h5>
 
     <div class="doc doc-contents ">
 
-      <p>Refresh the represented models from internal caches.</p>
+      <p>Constructor. Use <code>number_batteries</code> to specify the total number of batteries installed.</p>
 
         <details class="quote">
           <summary>Source code in <code>givenergy_modbus/model/plant.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Refresh the represented models from internal caches.&quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">inverter</span> <span class="o">=</span> <span class="n">Inverter</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inverter_rc</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">batteries</span> <span class="o">=</span> <span class="p">[</span><span class="n">Battery</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span> <span class="k">for</span> <span class="n">rc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batteries_rcs</span><span class="p">]</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Constructor. Use `number_batteries` to specify the total number of batteries installed.&quot;&quot;&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inverter_rc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;inverter_rc&#39;</span><span class="p">,</span> <span class="n">RegisterCache</span><span class="p">())</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;batteries_rcs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s1">&#39;batteries_rcs&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">RegisterCache</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;number_batteries&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))]</span>
+    <span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
 
   </div>
+
 
 
 
@@ -6360,13 +6438,13 @@ and TransactionManager throughout constructors up the call chain.</p>
     <span class="n">item_upper</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">item_upper</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_lookup_table</span><span class="p">:</span>
         <span class="n">register</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_lookup_table</span><span class="p">[</span><span class="n">item_upper</span><span class="p">]</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_registers</span><span class="p">[</span><span class="n">register</span><span class="p">]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">register</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">register</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">item_upper</span> <span class="o">+</span> <span class="s1">&#39;_H&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_lookup_table</span> <span class="ow">and</span> <span class="n">item_upper</span> <span class="o">+</span> <span class="s1">&#39;_L&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_lookup_table</span><span class="p">:</span>
         <span class="n">register_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_lookup_table</span><span class="p">[</span><span class="n">item_upper</span> <span class="o">+</span> <span class="s1">&#39;_H&#39;</span><span class="p">]</span>
         <span class="n">register_l</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_lookup_table</span><span class="p">[</span><span class="n">item_upper</span> <span class="o">+</span> <span class="s1">&#39;_L&#39;</span><span class="p">]</span>
-        <span class="n">val_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_registers</span><span class="p">[</span><span class="n">register_h</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span>
-        <span class="n">val_l</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_registers</span><span class="p">[</span><span class="n">register_l</span><span class="p">]</span>
+        <span class="n">val_h</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">register_h</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span>
+        <span class="n">val_l</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">register_l</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">register_l</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val_h</span> <span class="o">+</span> <span class="n">val_l</span><span class="p">)</span>
     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 </code></pre></div>
@@ -6398,7 +6476,7 @@ and TransactionManager throughout constructors up the call chain.</p>
     <span class="sd">&quot;&quot;&quot;Dump the internal state of registers and their value representations.&quot;&quot;&quot;</span>
     <span class="n">class_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-    <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_registers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">class_name</span> <span class="o">!=</span> <span class="n">r</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
             <span class="n">class_name</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;### &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
@@ -6471,7 +6549,7 @@ and TransactionManager throughout constructors up the call chain.</p>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Register</span><span class="p">],</span> <span class="n">registers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;Update internal holding register cache with given values.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">registers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_registers</span><span class="p">[</span><span class="n">type_</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">type_</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
 </code></pre></div>
         </details>
     </div>
@@ -6498,7 +6576,7 @@ and TransactionManager throughout constructors up the call chain.</p>
           <summary>Source code in <code>givenergy_modbus/model/register_cache.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return JSON representation of the register cache, suitable for using with `from_json()`.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_registers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
